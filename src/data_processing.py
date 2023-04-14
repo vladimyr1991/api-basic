@@ -1,11 +1,11 @@
 import pandas as pd
-
+import os
 
 class DataProcessing:
 
     def __init__(self):
         self.dataset = None
-        self.routeToData = "./data/co2-dataset/CO2-emissions.csv"
+        self.routeToData = os.path.abspath("./data/co2-dataset/CO2-emissions.csv")
         self.dataset = pd.read_csv(self.routeToData)
         self.country_codes = list(self.dataset["Code"].unique())
 

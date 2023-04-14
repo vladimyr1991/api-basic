@@ -1,7 +1,5 @@
-from typing import Union
 import uvicorn
 from fastapi import FastAPI
-from typing import List
 from pydantic import BaseModel
 from typing import Literal
 from fastapi.responses import JSONResponse
@@ -14,7 +12,6 @@ app = FastAPI()
 dp = DataProcessing()
 
 
-# print(dp.country_codes)
 
 def my_schema():
     openapi_schema = get_openapi(
@@ -112,4 +109,4 @@ def calculate_statistics(parameters: ParameterRequest):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    uvicorn.run("api:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("api:app", host="0.0.0.0", port=80, reload=True)
