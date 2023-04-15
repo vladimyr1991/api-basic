@@ -10,7 +10,7 @@ Main idea is that API that gives out some statistics from a static source of dat
 ## How to run
 - execute 
 ```docker-compose up --build```
-- API should run on [localhost:8000](http://localhost:8000)
+- API should run on [localhost:8080](http://localhost:8080)
 
 ## How to use
-- Please see swagger documentation at [localhost:8000/docs](http://localhost:8000/docs)
+- Please see swagger documentation at [localhost:8080/docs](http://localhost:8080/docs)
