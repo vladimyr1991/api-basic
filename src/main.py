@@ -1,13 +1,16 @@
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from pydantic import BaseModel
 from typing import Literal
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.encoders import jsonable_encoder
 from data_processing import DataProcessing
 from fastapi.openapi.utils import get_openapi
+from fastapi.templating import Jinja2Templates
 
 app = FastAPI()
+
+templates = Jinja2Templates(directory="templates")
 
 dp = DataProcessing()
 
@@ -53,18 +56,27 @@ class ParameterRequest(BaseModel):
             }
 
 
-@app.post("/calculateStatistics")
+@app.get("/", tags=["Methods"], include_in_schema=False)
+async def main(request: Request):
+    context = {"request": request}
+    return templates.TemplateResponse("index.html", context)
+
+
+@app.get("/healthcheck", tags=["Methods"], include_in_schema=False)
+def read_root():
+    return {"status": "ok"}
+
+
+@app.post("/calculateStatistics", tags=["Methods"])
 def calculate_statistics(parameters: ParameterRequest):
     """
     <b>statistics_type:</b> id of statistics from 1 to 4 in accordance with the technical task
 
-    <b>country_codes:</b> list with country code(s) (Ex,: ["can","lux","est"])
+    <b>country_codes:</b> list with country code(s) (Ex,: ["can","lux","est"]) or null if method is not required
     """
 
     statistics_type = int(parameters.statistics_type)
     data = {}
-
-    # print(parameters)
 
     if statistics_type == 1 or statistics_type == 3:
         if not parameters.country_codes:
@@ -105,8 +117,3 @@ def calculate_statistics(parameters: ParameterRequest):
             return JSONResponse(status_code=400, content=content)
 
     return JSONResponse(content=jsonable_encoder(data))
-
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    uvicorn.run("api:app", host="0.0.0.0", port=8080, reload=True)
